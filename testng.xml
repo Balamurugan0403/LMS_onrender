@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+  <test thread-count="5" name="Test">
+    <classes>
+      <class name="Tests.GetAllCourseStructures"/>
+      <class name="Tests.GetNotesQueryParam"/>
+      <class name="Tests.CreateNotes"/>
+      <class name="Tests.DeleteNoteTest"/>
+      <class name="Tests.UpdateNoteTest"/>
+      <class name="Tests.GetAllInstitution"/>
+      <class name="Tests.GetNoteById"/>
+      <class name="Tests.HealthCheckTest"/>
+      <class name="Tests.TogglePinTest"/>
+      <class name="Tests.LoginTest"/>
+      <class name="Tests.GetAllRoles"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
