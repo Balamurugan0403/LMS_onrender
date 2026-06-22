@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-06-18T00:00:10 IST" name="Default suite" finished-at="2026-06-18T00:00:16 IST" duration-ms="6115">
+    <groups>
+    </groups>
+    <test started-at="2026-06-18T00:00:10 IST" name="Default test" finished-at="2026-06-18T00:00:16 IST" duration-ms="6115">
+      <class name="Tests.GetNoteById">
+        <test-method signature="getNoteById()[pri:0, instance:Tests.GetNoteById@186f8716]" started-at="2026-06-18T00:00:10 IST" name="getNoteById" finished-at="2026-06-18T00:00:15 IST" duration-ms="4278" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getNoteById -->
+        <test-method signature="getNoteByIdPathParam()[pri:0, instance:Tests.GetNoteById@186f8716]" started-at="2026-06-18T00:00:15 IST" name="getNoteByIdPathParam" finished-at="2026-06-18T00:00:16 IST" duration-ms="1777" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getNoteByIdPathParam -->
+      </class> <!-- Tests.GetNoteById -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
