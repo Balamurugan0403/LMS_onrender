@@ -8,7 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class LoginTest extends BaseTest {
+public class LoginTest {
 
     @Test
     public void validLogin() {
