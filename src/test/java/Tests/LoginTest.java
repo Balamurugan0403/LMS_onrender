@@ -27,23 +27,26 @@ public class LoginTest {
         payload.put("email", "sam@gmail.com");
         payload.put("password", "123");
 
-        Response response =
-                RestAssured.given()
-                        .contentType(ContentType.JSON)
-                        .body(payload)
-                        .when()
-                        .post("/user/login");
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post("/user/login");
 
         response.prettyPrint();
 
         response.then().statusCode(201);
 
-        String message =
-                response.jsonPath().getString("message[0].value");
+        String message = response.jsonPath().getString("message[0].value");
 
-        Assert.assertEquals(
-                message,
-                "Admin logged in successfully");
+        Assert.assertEquals(message, "Admin logged in successfully");
+
+        String token = response.jsonPath().getString("token");
+
+        Assert.assertNotNull(token);
+        Assert.assertFalse(token.isEmpty());
+
+        System.out.println("Generated Token : " + token);
     }
 
     @Test
@@ -54,16 +57,19 @@ public class LoginTest {
         payload.put("email", "invalid@gmail.com");
         payload.put("password", "123");
 
-        Response response =
-                RestAssured.given()
-                        .contentType(ContentType.JSON)
-                        .body(payload)
-                        .when()
-                        .post("/user/login");
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post("/user/login");
 
         response.prettyPrint();
 
-        response.then().statusCode(403);
+        response.then().statusCode(400);
+
+        String message = response.jsonPath().getString("message[0].value");
+
+        Assert.assertEquals(message, "Email is invalid");
     }
 
     @Test
@@ -74,16 +80,19 @@ public class LoginTest {
         payload.put("email", "sam@gmail.com");
         payload.put("password", "wrongpassword");
 
-        Response response =
-                RestAssured.given()
-                        .contentType(ContentType.JSON)
-                        .body(payload)
-                        .when()
-                        .post("/user/login");
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post("/user/login");
 
         response.prettyPrint();
 
-        response.then().statusCode(403);
+        response.then().statusCode(400);
+
+        String message = response.jsonPath().getString("message[0].value");
+
+        Assert.assertEquals(message, "Password is incorrect");
     }
 
     @Test
@@ -94,15 +103,18 @@ public class LoginTest {
         payload.put("email", "");
         payload.put("password", "");
 
-        Response response =
-                RestAssured.given()
-                        .contentType(ContentType.JSON)
-                        .body(payload)
-                        .when()
-                        .post("/user/login");
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post("/user/login");
 
         response.prettyPrint();
 
-        response.then().statusCode(403);
+        response.then().statusCode(400);
+
+        String message = response.jsonPath().getString("message[0].value");
+
+        Assert.assertEquals(message, "All fields are required");
     }
 }
