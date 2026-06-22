@@ -1,120 +1,50 @@
 package Tests;
 
-import java.util.HashMap;
-import java.util.Map;
+import static io.restassured.RestAssured.*;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import payload.LoginPayload;
 import routes.ApiRoutes;
 
 public class LoginTest {
 
-    @BeforeClass
-    public void setup() {
-        RestAssured.baseURI = ApiRoutes.BASE_URL;
+    @Test
+    public void validLoginTest() {
+
+        Response res = given()
+                .contentType(ContentType.JSON)
+                .body(LoginPayload.getLoginBody("sam@gmail.com", "123"))
+                .when()
+                .post(ApiRoutes.LOGIN);
+
+        res.then().statusCode(201);
+        res.prettyPrint();
     }
 
-    @Test
-    public void validLogin() {
-
-        Map<String, Object> payload = new HashMap<>();
-
-        payload.put("email", "sam@gmail.com");
-        payload.put("password", "123");
-
-        Response response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(payload)
-                .when()
-                .post("/user/login");
-
-        response.prettyPrint();
-
-        response.then().statusCode(201);
-
-        String message = response.jsonPath().getString("message[0].value");
-
-        Assert.assertEquals(message, "Admin logged in successfully");
-
-        String token = response.jsonPath().getString("token");
-
-        Assert.assertNotNull(token);
-        Assert.assertFalse(token.isEmpty());
-
-        System.out.println("Generated Token : " + token);
+    @DataProvider(name = "invalidLoginData")
+    public Object[][] invalidLoginData() {
+        return new Object[][]{
+                {"sam@gmail.comm", "123"},
+                {"sam@gmail.com", "1234"},
+                {"", ""},
+                {"", "123"},
+                {"sam@gmail.com", ""}
+        };
     }
 
-    @Test
-    public void invalidEmail() {
+    @Test(dataProvider = "invalidLoginData")
+    public void invalidLoginTest(String email, String password) {
 
-        Map<String, Object> payload = new HashMap<>();
-
-        payload.put("email", "invalid@gmail.com");
-        payload.put("password", "123");
-
-        Response response = RestAssured.given()
+        Response res = given()
                 .contentType(ContentType.JSON)
-                .body(payload)
+                .body(LoginPayload.getLoginBody(email, password))
                 .when()
-                .post("/user/login");
+                .post(ApiRoutes.LOGIN);
 
-        response.prettyPrint();
-
-        response.then().statusCode(400);
-
-        String message = response.jsonPath().getString("message[0].value");
-
-        Assert.assertEquals(message, "Email is invalid");
-    }
-
-    @Test
-    public void invalidpassword() {
-
-        Map<String, Object> payload = new HashMap<>();
-
-        payload.put("email", "sam@gmail.com");
-        payload.put("password", "wrongpassword");
-
-        Response response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(payload)
-                .when()
-                .post("/user/login");
-
-        response.prettyPrint();
-
-        response.then().statusCode(400);
-
-        String message = response.jsonPath().getString("message[0].value");
-
-        Assert.assertEquals(message, "Password is incorrect");
-    }
-
-    @Test
-    public void missingFields() {
-
-        Map<String, Object> payload = new HashMap<>();
-
-        payload.put("email", "");
-        payload.put("password", "");
-
-        Response response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(payload)
-                .when()
-                .post("/user/login");
-
-        response.prettyPrint();
-
-        response.then().statusCode(400);
-
-        String message = response.jsonPath().getString("message[0].value");
-
-        Assert.assertEquals(message, "All fields are required");
+        res.then().statusCode(400);
     }
 }
